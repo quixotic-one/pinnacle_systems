@@ -1,0 +1,3 @@
+pinnacle-devops/pinnacle-devops/.terraform/*
+*.log
+*.log*
