@@ -16,7 +16,7 @@ resource "aws_subnet" "public" {
 
   availability_zone = "${element(split(",",var.availability_zones), count.index)}"
 
-  tags {
+  tags = {
     Name = "${format("tf-${var.StackName}-public-%03d", count.index+1)}"
   }
 }

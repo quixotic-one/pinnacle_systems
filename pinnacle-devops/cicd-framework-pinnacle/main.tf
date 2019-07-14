@@ -19,7 +19,7 @@ resource "tfStatesBucket" "tf-states" {
     enabled = true
   }
 
-  tags {
+  tags = {
     Name = "${StackName}-tf-states-${var.aws_region}"
   }
 
@@ -40,7 +40,7 @@ data "template_file" "userdata" {
 
 # Create a VPC to launch our instances into
 resource "aws_vpc" "default" {
-  tags {
+  tags = {
     Name = "tf-${var.StackName}-vpc"
   }
   cidr_block = "${var.vpcCidr}"
@@ -58,12 +58,12 @@ resource "aws_route" "internet_access" {
   gateway_id             = "${aws_internet_gateway.default.id}"
 }
 
-resource "aws_elb" "jenkins-elb" {
+resource "aws_elb" "cicd-elb" {
   name = "tf-${var.StackName}-elb"
 
   # The same availability zone as our instances
-  subnets = ["${aws_subnet.public.*.id}"]
-  security_groups = ["${aws_security_group.public.id}"]
+  subnets = aws_subnet.public.*.id
+  security_groups = aws_security_group.public.*.id
 
   listener {
     instance_port = 8080
@@ -95,15 +95,15 @@ resource "aws_elb" "jenkins-elb" {
 
 }
 
-resource "aws_autoscaling_group" "jenkins-asg" {
-  vpc_zone_identifier = ["${aws_subnet.public.*.id}"]
-  name = "tf-${var.StackName}-asg-${aws_launch_configuration.jenkins-lc.id}"
+resource "aws_autoscaling_group" "cicd-asg" {
+  vpc_zone_identifier = aws_subnet.public.*.id
+  name = "tf-${var.StackName}-asg-${aws_launch_configuration.cicd-lc.id}"
   max_size = "${var.asg_max}"
   min_size = "${var.asg_min}"
   desired_capacity = "${var.asg_desired}"
   force_delete = true
-  launch_configuration = "${aws_launch_configuration.jenkins-lc.name}"
-  load_balancers = ["${aws_elb.jenkins-elb.name}"]
+  launch_configuration = "${aws_launch_configuration.cicd-lc.name}"
+  load_balancers = ["${aws_elb.cicd-elb.name}"]
 
   lifecycle {
     create_before_destroy = true
@@ -111,16 +111,16 @@ resource "aws_autoscaling_group" "jenkins-asg" {
 
   tag {
     key = "Name"
-    value = "tf-${var.StackName}-jenkins-asg"
+    value = "tf-${var.StackName}-cicd-asg"
     propagate_at_launch = "true"
   }
 }
 
-resource "aws_launch_configuration" "jenkins-lc" {
+resource "aws_launch_configuration" "cicd-lc" {
   name_prefix = "tf-${var.StackName}-lc"
   image_id = "${lookup(var.aws_amis, var.aws_region)}"
   instance_type = "${var.instance_type}"
-  iam_instance_profile = "${aws_iam_instance_profile.jenkins_profile.name}"
+  iam_instance_profile = "${aws_iam_instance_profile.cicd_profile.name}"
   # Security group
   security_groups = ["${aws_security_group.private.id}","${aws_security_group.public.id}"]
   user_data = "${data.template_file.userdata.rendered}"

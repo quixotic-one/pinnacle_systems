@@ -11,6 +11,7 @@ resource "null_resource" "copy_scripts" {
 
 }
 
+
 /*
 resource "tfStatesBucket" "tf-states" {
   bucket = "${StackName}-tf-states-${var.aws_region}"
@@ -19,7 +20,7 @@ resource "tfStatesBucket" "tf-states" {
     enabled = true
   }
 
-  tags {
+  tags = {
     Name = "${StackName}-tf-states-${var.aws_region}"
   }
 
@@ -40,7 +41,7 @@ data "template_file" "userdata" {
 
 # Create a VPC to launch our instances into
 resource "aws_vpc" "default" {
-  tags {
+  tags = {
     Name = "tf-${var.StackName}-vpc"
   }
   cidr_block = "${var.vpcCidr}"
@@ -62,8 +63,8 @@ resource "aws_elb" "jenkins-elb" {
   name = "tf-${var.StackName}-elb"
 
   # The same availability zone as our instances
-  subnets = ["${aws_subnet.public.*.id}"]
-  security_groups = ["${aws_security_group.public.id}"]
+  subnets = aws_subnet.public.*.id
+  security_groups = aws_security_group.public.*.id
 
   listener {
     instance_port = 8080
@@ -96,7 +97,7 @@ resource "aws_elb" "jenkins-elb" {
 }
 
 resource "aws_autoscaling_group" "jenkins-asg" {
-  vpc_zone_identifier = ["${aws_subnet.public.*.id}"]
+  vpc_zone_identifier = aws_subnet.public.*.id
   name = "tf-${var.StackName}-asg-${aws_launch_configuration.jenkins-lc.id}"
   max_size = "${var.asg_max}"
   min_size = "${var.asg_min}"

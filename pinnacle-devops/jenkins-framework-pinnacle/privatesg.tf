@@ -5,7 +5,7 @@ resource "aws_security_group" "private" {
   description = "Used in the terraform"
   vpc_id = "${aws_vpc.default.id}"
 
-  tags {
+  tags = {
     key = "Name"
     value = "tf-${var.StackName}-private-sg"
   }

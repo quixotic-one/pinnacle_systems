@@ -1,0 +1,8 @@
+StackName="mysql-pinnacle"
+region="us-west-2"
+remoteStateS3Bucket="pinnalce-devops-us-west-2/pinnacle-tf-states"
+environmentType="development"
+key_name="pinnacle-devops"
+customer="pinnacle"
+vpcCidr="10.254.0.0/16"
+remoteAccess="72.193.147.0/24"

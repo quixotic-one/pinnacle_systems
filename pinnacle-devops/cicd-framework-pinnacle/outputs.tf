@@ -1,3 +1,3 @@
-output "JenkinsUI" {
-  value = "${aws_elb.jenkins-elb.dns_name}"
+output "CICDUI" {
+  value = "${aws_elb.cicd-elb.dns_name}"
 }

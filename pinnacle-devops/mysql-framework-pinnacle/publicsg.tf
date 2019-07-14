@@ -5,7 +5,7 @@ resource "aws_security_group" "public" {
   description = "Used in the terraform"
   vpc_id = "${aws_vpc.default.id}"
 
-  tags {
+  tags = {
     key = "Name"
     value = "tf-${var.StackName}-public-sg"
   }
@@ -15,7 +15,7 @@ resource "aws_security_group" "public" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["${split(",", var.remoteAccess)}"]
+    cidr_blocks = "${split(",", var.remoteAccess)}"
   }
 
   # HTTP access from anywhere
@@ -23,7 +23,7 @@ resource "aws_security_group" "public" {
     from_port = 3306
     to_port = 3306
     protocol = "tcp"
-    cidr_blocks = ["${split(",", var.remoteAccess)}"]
+    cidr_blocks = "${split(",", var.remoteAccess)}"
   }
 
   # outbound internet access
