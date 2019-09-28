@@ -1,7 +1,7 @@
-resource "aws_iam_policy" "mysql" {
-  name = "mysql-${var.StackName}_policy"
+resource "aws_iam_policy" "mysql_pinnacle" {
+  name = "mysql-${var.StackName}-policy"
   path = "/"
-  description = "mysql-${var.StackName}_policy"
+  description = "mysql-${var.StackName}-policy"
   policy = "${data.template_file.iam.rendered}"
 }
 
@@ -12,19 +12,19 @@ data "template_file" "iam" {
   }
 }
 
-resource "aws_iam_policy_attachment" "mysql-attach" {
-  name = "mysql-${var.StackName}_attach"
-  roles = ["${aws_iam_role.mysql.name}"]
-  policy_arn = "${aws_iam_policy.mysql.arn}"
+resource "aws_iam_policy_attachment" "mysql_pinnacle" {
+  name = "mysql-${var.StackName}-attach"
+  roles = ["${aws_iam_role.mysql_pinnacle.name}"]
+  policy_arn = "${aws_iam_policy.mysql_pinnacle.arn}"
 }
 
-resource "aws_iam_instance_profile" "mysql_profile" {
-  name = "mysql-${var.StackName}-profile"
-  role = "${aws_iam_role.mysql.name}"
+resource "aws_iam_instance_profile" "mysql_pinnacle" {
+  name = "mysql-${var.StackName}-instance"
+  role = "${aws_iam_role.mysql_pinnacle.name}"
 }
 
-resource "aws_iam_role" "mysql" {
-  name = "mysql-${var.StackName}"
+resource "aws_iam_role" "mysql_pinnacle" {
+  name = "mysql-${var.StackName}-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

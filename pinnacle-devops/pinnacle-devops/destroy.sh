@@ -8,7 +8,7 @@ fi
 echo
 echo "##############################################################################"
 echo
-echo "                           Destroying Unipower Jenkins Infrastructure"
+echo "                           Destroying Pinnacle Jenkins Infrastructure"
 echo
 echo "##############################################################################"
 echo

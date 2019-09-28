@@ -2,7 +2,7 @@
 # the instances over SSH and HTTP
 resource "aws_security_group" "private" {
   name = "tf-${var.StackName}-private-sg"
-  description = "Used in the terraform"
+  description = "${var.StackName} used in the terraform"
   vpc_id = "${aws_vpc.default.id}"
 
   tags = {

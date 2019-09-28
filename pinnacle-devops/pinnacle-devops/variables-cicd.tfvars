@@ -1,4 +1,4 @@
-StackName="cicd-pinnacle"
+StackName="pinnacle"
 region="us-west-2"
 remoteStateS3Bucket="pinnalce-devops-us-west-2/pinnacle-tf-states"
 environmentType="development"

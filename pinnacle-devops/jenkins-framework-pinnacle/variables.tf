@@ -44,6 +44,11 @@ variable "StackName" {
   description = "StackName"
 }
 
+variable "aws_iam_role" {
+  description = "jenkins_pinnacle"
+  default = "jenkins_pinnacle"
+}
+
 variable "customer" {}
 
 variable "vpcCidr" {}

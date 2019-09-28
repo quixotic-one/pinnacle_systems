@@ -17,7 +17,7 @@ useIAM=$2
 if [ -z "${useIAM}" ];
 then
     echo "Using Local AWS Credentials for Remote State"
-    aws_profile=profile
+    aws_profile=pinnacle
     aws_access_key_id=$(aws configure get aws_access_key_id --profile ${aws_profile})
     aws_secret_access_key=$(aws configure get aws_secret_access_key --profile ${aws_profile})
     export AWS_ACCESS_KEY_ID=${aws_access_key_id}

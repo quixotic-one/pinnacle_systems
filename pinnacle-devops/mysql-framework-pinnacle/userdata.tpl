@@ -28,14 +28,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# INSTALL POSTGRES
-
-yum install mysql -y
-
-if [ $? -ne 0 ]; then
-  echo Could not download install_mysql
-  exit 1
-fi
 
 
 # Setting up SSH IAM Access
@@ -55,3 +47,43 @@ mysql ALL = NOPASSWD: ALL
 mysql ALL=(root) NOPASSWD:/usr/bin/salt-key
 Defaults:mysql !requiretty
 EOF
+
+# Add mariaDB repo
+cat << EOF > /etc/yum.repos.d/MariaDB.repo
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF
+
+if [ $? -ne 0 ]; then
+  echo Could not add MariaDB.repo
+  exit 1
+fi
+
+# Update yum repo
+yum update -y
+
+if [ $? -ne 0 ]; then
+  echo Could not add MariaDB.repo
+  exit 1
+fi
+
+# INSTALL MariaDB
+yum install mariadb-server.x86_64 -y
+yum install mariadb-libs.x86_64 -y
+
+if [ $? -ne 0 ]; then
+  echo Could not download install_mysql
+  exit 1
+fi
+
+# Add MariaDB Service and Start
+systemctl start mariadb
+systemctl enable mariadb
+
+if [ $? -ne 0 ]; then
+  echo Could not start mariadb
+  exit 1
+fi

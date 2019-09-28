@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "aws_amis" {
   type = "map"
   default = {
-    us-west-2 = "ami-07a8db6697151dc9f"
+    us-west-2 = "ami-068a5e9c87370be8b"
   }
 }
 
@@ -42,6 +42,21 @@ variable "asg_desired" {
 
 variable "StackName" {
   description = "StackName"
+}
+
+variable "aws_iam_role" {
+  description = "mysql_pinnacle_role"
+  default = "mysql_pinnacle"
+}
+
+variable "aws_iam_instance_profile" {
+  description = "mysql_pinnacle_instance"
+  default = "mysql_pinnacle"
+}
+
+variable "aws_iam_policy_attachment" {
+  description = "mysql_pinnacle_policy"
+  default = "mysql_pinnacle"
 }
 
 variable "customer" {}

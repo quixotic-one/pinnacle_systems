@@ -8,7 +8,7 @@ fi
 echo
 echo "##############################################################################"
 echo
-echo "                       Deploying Unipower Jenkins Infrastructure"
+echo "                       Deploying Pinnacle Jenkins Infrastructure"
 echo
 echo "##############################################################################"
 echo

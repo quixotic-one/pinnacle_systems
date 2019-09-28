@@ -59,7 +59,7 @@ resource "aws_route" "internet_access" {
 }
 
 resource "aws_elb" "mysql-elb" {
-  name = "tf-${var.StackName}-elb"
+  name = "tf-${var.StackName}-mysql-elb"
 
   # The same availability zone as our instances
   subnets = aws_subnet.public.*.id
@@ -117,10 +117,10 @@ resource "aws_autoscaling_group" "mysql-asg" {
 }
 
 resource "aws_launch_configuration" "mysql-lc" {
-  name_prefix = "tf-${var.StackName}-lc"
+  name_prefix = "tf-${var.StackName}-mysql-lc"
   image_id = "${lookup(var.aws_amis, var.aws_region)}"
   instance_type = "${var.instance_type}"
-  iam_instance_profile = "${aws_iam_instance_profile.mysql_profile.name}"
+  iam_instance_profile = "${aws_iam_instance_profile.mysql_pinnacle.name}"
   # Security group
   security_groups = ["${aws_security_group.private.id}","${aws_security_group.public.id}"]
   user_data = "${data.template_file.userdata.rendered}"

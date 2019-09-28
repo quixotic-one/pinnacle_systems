@@ -4,6 +4,15 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
+terraform {
+  backend "s3" {
+    # Replace this with your bucket name!
+    bucket         = "${StackName}-tf-states-${var.aws_region}"
+    key            = "global/s3/terraform.tfstate"
+    region         = "us-west-2"
+  }
+}
+
 resource "null_resource" "copy_scripts" {
   provisioner "local-exec" {
     command = "aws s3 cp ${path.module}/scripts s3://${var.customer}-devops-${var.aws_region}/ --recursive"
@@ -60,7 +69,7 @@ resource "aws_route" "internet_access" {
 }
 
 resource "aws_elb" "jenkins-elb" {
-  name = "tf-${var.StackName}-elb"
+  name = "tf-${var.StackName}-jenkins-elb"
 
   # The same availability zone as our instances
   subnets = aws_subnet.public.*.id
@@ -118,10 +127,10 @@ resource "aws_autoscaling_group" "jenkins-asg" {
 }
 
 resource "aws_launch_configuration" "jenkins-lc" {
-  name_prefix = "tf-${var.StackName}-lc"
+  name_prefix = "tf-${var.StackName}-jenkins-lc"
   image_id = "${lookup(var.aws_amis, var.aws_region)}"
   instance_type = "${var.instance_type}"
-  iam_instance_profile = "${aws_iam_instance_profile.jenkins_profile.name}"
+  iam_instance_profile = "${aws_iam_instance_profile.jenkins_pinnacle.name}"
   # Security group
   security_groups = ["${aws_security_group.private.id}","${aws_security_group.public.id}"]
   user_data = "${data.template_file.userdata.rendered}"
